@@ -7,10 +7,10 @@
 echo "running smartdas script"
 
 # --------- User Settings ---------
-PROCESS2RUN="/home/pi/bin/pydas.py"
+PROCESS2RUN="/home/pi/bin/pydas/pydas.py"
 
 # --------- Run program ---------
-/usr/bin/python3 $PROCESS2RUN 2>&1 /home/pi/bin/log/start_pydas.log &
+/usr/bin/python3 $PROCESS2RUN 2>&1 /home/pi/bin/pydas/log/start_pydas.log &
 VAR=`pgrep -f "$PROCESS2RUN"`
 echo "program pid $VAR"
 
