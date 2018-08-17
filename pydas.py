@@ -98,6 +98,9 @@ def polling(module, config):
             # store values to csv file
             module.store_data_csv()
 
+            # analyse current alarm
+            module.analyze_alarm()
+
             # wait to avoid further calls in the same second
             time.sleep(1.5)
 
@@ -118,7 +121,7 @@ def main():
             'file_header' : 'primo_maggio', # data file header
             #'ws_url' : 'https://rmqa.arpal.gov.it/loggeralarms/1170/' # web service url
             #'ws_url' : 'http://rmqa.arpa.vda.it/loggeralarms/4120/', # web service url
-            'ws_url' : '192.168.0.10:8000/loggeralarms/4120/', # web service url
+            'ws_url' : 'http://192.168.0.12:8000/loggeralarms/4120/', # web service url
             'reset_alarm_msg_dealy' : 3600, # send a message to ackoledge no alarms (seconds)
         }
 
