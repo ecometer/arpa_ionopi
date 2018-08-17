@@ -7,7 +7,7 @@
 echo "stopping pydas script"
 
 # --------- User Settings ---------
-PROCESS2KILL="/home/pi/bin/pydas.py"
+PROCESS2KILL="/home/pi/bin/pydas/pydas.py"
 
 # --------- Run program ---------
 echo "killing process id [`pgrep -f $PROCESS2KILL`]"
