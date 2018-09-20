@@ -12,8 +12,8 @@
 # ----------------------------------------------------------------------
 """ Setup
     sudo apt-get install python3-pip
-    pip3 install
-
+    pip3 install -r requirements.txt
+    mkdir ~/bin/
     C:/Users/Paolo/.ssh/id_rsa
     scp -r . pi@192.168.168.229:~/bin/
     scp -r /cygdrive/c/Dev/locations/net_ecometer/Prodotti/Sferalabs/iono/python/* pi@192.168.168.229:~/bin/
@@ -28,7 +28,7 @@ from datetime import datetime
 import threading
 # custom
 from functions import create_log, clear_screen, unix_time
-from iono_arpa_vda import IonoArpaVda
+from iono_w1 import IonoW1
 
 def polling(module, config):
     """ polling """
@@ -47,7 +47,7 @@ def polling(module, config):
             logging.info("*** New mean ***")
 
             # store values to csv file
-            module.store_ced_data_csv()
+            # module.store_ced_data_csv()
 
         # check for new polling
         if int(ptime / config['polling_time']) == (ptime / config['polling_time']):
@@ -89,11 +89,11 @@ def polling(module, config):
             # arpa stations
             #
             module.get_digital_input()
-            module.get_analog_input()
+            #module.get_one_wire_input()
 
             # append new temperature data
             # to make later mean on store_time
-            module.append_temperature()
+            #module.append_temperature()
 
             # store values to csv file
             module.store_data_csv()
@@ -114,10 +114,10 @@ def main():
 
         # config
         config = {
-            'polling_time' : 10,    # polling (seconds)
-            'store_time' : 3600,    # store data (seconds)
-            'data_path' : None,     # data path
-            'ftp_path' : None,      # data path for ftp export
+            'polling_time' : 10,            # polling (seconds)
+            'store_time' : 60,              # store data (seconds)
+            'data_path' : None,             # data path - set later on
+            'ftp_path' : None,              # data path for ftp export - set later on
             'file_header' : 'primo_maggio', # data file header
             #'ws_url' : 'https://rmqa.arpal.gov.it/loggeralarms/1170/' # web service url
             #'ws_url' : 'http://rmqa.arpa.vda.it/loggeralarms/4120/', # web service url
@@ -127,7 +127,7 @@ def main():
 
         # iono config
         config_iono = {
-            'use_ai' : True,  # analog input
+            'use_ai' : False, # analog input
             'use_io' : True,  # digital io
             'use_ev' : False, # digital io events
             'use_1w' : False, # one wire input (temperature)
@@ -159,7 +159,7 @@ def main():
 
         # create main module object
         logging.info("Creating main iono object...")
-        module = IonoArpaVda(config, config_iono)
+        module = IonoW1(config, config_iono)
 
         # start main loop
         logging.info("Starting main thread")
@@ -175,7 +175,8 @@ def main():
     except Exception as ex:
         logging.critical("An exception was encountered in main(): %s", str(ex))
     finally:
-        module.cleanup()
+        if module:
+            module.cleanup()
         logging.info("End")
 
 if __name__ == '__main__':
