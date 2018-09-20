@@ -9,7 +9,7 @@ Setup
 
   * pip3 install -r requirements.txt
 
-  * mkdir ~/bin/
+  * mkdir -p ~/bin/pydas
   * git clone https://github.com/ecometer/arpa_ionopi.git ~/bin/pydas/
   * chmod +x ~/bin/pydas/*
 
