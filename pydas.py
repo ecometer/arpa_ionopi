@@ -47,7 +47,7 @@ def polling(module, config):
             logging.info("*** New mean ***")
 
             # store values to csv file
-            # module.store_ced_data_csv()
+            module.store_ced_data_csv()
 
         # check for new polling
         if int(ptime / config['polling_time']) == (ptime / config['polling_time']):
@@ -118,10 +118,10 @@ def main():
             'store_time' : 60,              # store data (seconds)
             'data_path' : None,             # data path - set later on
             'ftp_path' : None,              # data path for ftp export - set later on
-            'file_header' : 'primo_maggio', # data file header
-            #'ws_url' : 'https://rmqa.arpal.gov.it/loggeralarms/1170/' # web service url
+            'file_header' : 'xxxxxxxxxxxx', # data file header
+            'ws_url' : 'https://rmqa.arpal.gov.it/loggeralarms/9999/' # web service url
             #'ws_url' : 'http://rmqa.arpa.vda.it/loggeralarms/4120/', # web service url
-            'ws_url' : 'http://192.168.0.12:8000/loggeralarms/4120/', # web service url
+            #'ws_url' : 'http://192.168.0.12:8000/loggeralarms/4120/', # web service url
             'reset_alarm_msg_dealy' : 3600, # send a message to ackoledge no alarms (seconds)
         }
 
@@ -129,7 +129,7 @@ def main():
         config_iono = {
             'use_ai' : False, # analog input
             'use_io' : True,  # digital io
-            'use_ev' : False, # digital io events
+            'use_ev' : True,  # digital io events
             'use_1w' : False, # one wire input (temperature)
             'use_ro' : False, # relay outputs
             'use_oc' : False, # open collectors
