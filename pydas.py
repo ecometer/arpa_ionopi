@@ -2,22 +2,20 @@
 # pylint: disable=locally-disabled, broad-except, line-too-long
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------
-#  Copyright (c) 1995-2018, Ecometer s.n.c.
+#  Copyright (c) 1995-2019, Ecometer s.n.c.
 #  Author: Paolo Saudin.
 #
 #  Desc : Collect data from temperature sensors
 #  File : pydas.py
 #
-#  Date : 31/07/2018 17:32:49
+#  Date : 2019-03-04 15:31
 # ----------------------------------------------------------------------
 """ Setup
     sudo apt-get install python3-pip
     pip3 install -r requirements.txt
-    mkdir ~/bin/
-    C:/Users/Paolo/.ssh/id_rsa
-    scp -r . pi@192.168.168.229:~/bin/
-    scp -r /cygdrive/c/Dev/locations/net_ecometer/Prodotti/Sferalabs/iono/python/* pi@192.168.168.229:~/bin/
-    python3 bin/pydas.py
+    mkdir -p ~/bin/pydas/
+    scp -r /cygdrive/c/Dev/locations/net_ecometer/Prodotti/Sferalabs/iono/python/* pi@192.168.168.221:~/bin/pydas/
+    python3 ~./bin/pydas/pydas.py
 """
 import os
 import logging
@@ -41,13 +39,13 @@ def polling(module, config):
         # get the total seconds
         ptime = unix_time(now)
 
-        # check for new mean
-        if int(ptime / config['store_time']) == (ptime / config['store_time']):
-            # new mean
-            logging.info("*** New mean ***")
+        # # check for new mean
+        # if int(ptime / config['store_time']) == (ptime / config['store_time']):
+        #     # new mean
+        #     logging.info("*** New mean ***")
 
-            # store values to csv file
-            module.store_ced_data_csv()
+        #     # store values to csv file
+        #     module.store_ced_data_csv()
 
         # check for new polling
         if int(ptime / config['polling_time']) == (ptime / config['polling_time']):
@@ -86,9 +84,9 @@ def polling(module, config):
             # #module.set_open_collector_status(1, False)
 
             #
-            # arpa stations
+            # arpa stations enable [X]
             #
-            module.get_digital_input()
+            #module.get_digital_input()           # [X]
             #module.get_one_wire_input()
 
             # append new temperature data
@@ -96,10 +94,10 @@ def polling(module, config):
             #module.append_temperature()
 
             # store values to csv file
-            module.store_data_csv()
+            #module.store_data_csv()              # [X]
 
             # analyse current alarm
-            module.analyze_alarm()
+            #module.analyze_alarm()               # [X]
 
             # wait to avoid further calls in the same second
             time.sleep(1.5)
@@ -119,9 +117,9 @@ def main():
             'data_path' : None,             # data path - set later on
             'ftp_path' : None,              # data path for ftp export - set later on
             'file_header' : 'xxxxxxxxxxxx', # data file header
-            'ws_url' : 'https://rmqa.arpal.gov.it/loggeralarms/9999/' # web service url
+            'ws_url' : 'https://rmqa.ecometer.it/loggeralarms/0000/', # web service url
             #'ws_url' : 'http://rmqa.arpa.vda.it/loggeralarms/4120/', # web service url
-            #'ws_url' : 'http://192.168.0.12:8000/loggeralarms/4120/', # web service url
+            #'ws_url' : 'http://192.168.0.12:8000/loggeralarms/4120/' # web service url
             'reset_alarm_msg_dealy' : 3600, # send a message to ackoledge no alarms (seconds)
         }
 

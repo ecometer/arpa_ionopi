@@ -57,12 +57,12 @@ class Iono:
     ]
 
     digital_inputs = [ # Generic digital input
-        {'gpio': DI1, 'id': 1, 'name': 'DI 1', 'status': 0, 'status_ev': 0},
-        {'gpio': DI2, 'id': 2, 'name': 'DI 2', 'status': 0, 'status_ev': 0},
-        {'gpio': DI3, 'id': 3, 'name': 'DI 3', 'status': 0, 'status_ev': 0},
-        {'gpio': DI4, 'id': 4, 'name': 'DI 4', 'status': 0, 'status_ev': 0},
-        {'gpio': DI5, 'id': 5, 'name': 'DI 5', 'status': 0, 'status_ev': 0},
-        {'gpio': DI6, 'id': 6, 'name': 'DI 6', 'status': 0, 'status_ev': 0},
+        {'gpio': DI1, 'id': 1, 'name': 'DI 1', 'reverse' : 1, 'status': 0, 'status_ev': 0},
+        {'gpio': DI2, 'id': 2, 'name': 'DI 2', 'reverse' : 0, 'status': 0, 'status_ev': 0},
+        {'gpio': DI3, 'id': 3, 'name': 'DI 3', 'reverse' : 0, 'status': 0, 'status_ev': 0},
+        {'gpio': DI4, 'id': 4, 'name': 'DI 4', 'reverse' : 0, 'status': 0, 'status_ev': 0},
+        {'gpio': DI5, 'id': 5, 'name': 'DI 5', 'reverse' : 0, 'status': 0, 'status_ev': 0},
+        {'gpio': DI6, 'id': 6, 'name': 'DI 6', 'reverse' : 0, 'status': 0, 'status_ev': 0},
     ]
 
     analog_inputs = [ # Analog input (on terminal block) to A/D
@@ -182,12 +182,12 @@ class Iono:
         try:
 
             # GPIO.FALLING | GPIO.RISING | GPIO.BOTH
-            GPIO.add_event_detect(self.DI1, GPIO.RISING, callback=self._io_callback, bouncetime=100)
-            GPIO.add_event_detect(self.DI2, GPIO.RISING, callback=self._io_callback, bouncetime=100)
-            GPIO.add_event_detect(self.DI3, GPIO.RISING, callback=self._io_callback, bouncetime=100)
-            GPIO.add_event_detect(self.DI4, GPIO.RISING, callback=self._io_callback, bouncetime=100)
-            GPIO.add_event_detect(self.DI5, GPIO.RISING, callback=self._io_callback, bouncetime=100)
-            GPIO.add_event_detect(self.DI6, GPIO.RISING, callback=self._io_callback, bouncetime=100)
+            GPIO.add_event_detect(self.DI1, GPIO.RISING, callback=self._io_callback, bouncetime=500)
+            GPIO.add_event_detect(self.DI2, GPIO.RISING, callback=self._io_callback, bouncetime=500)
+            GPIO.add_event_detect(self.DI3, GPIO.RISING, callback=self._io_callback, bouncetime=500)
+            GPIO.add_event_detect(self.DI4, GPIO.RISING, callback=self._io_callback, bouncetime=500)
+            GPIO.add_event_detect(self.DI5, GPIO.RISING, callback=self._io_callback, bouncetime=500)
+            GPIO.add_event_detect(self.DI6, GPIO.RISING, callback=self._io_callback, bouncetime=500)
 
         except Exception as ex:
             logging.critical("An exception was encountered in _set_digital_io_events: %s", str(ex))
@@ -238,16 +238,19 @@ class Iono:
         """ Callback event """
         logging.debug("Function _io_callback - GPIO %s", channel)
 
-        # Get status (on/off)
-        status = GPIO.input(channel)
-        logging.debug("Status %s", status)
-
-        # If status is zero we skip away
-        if not status:
-            return
-
         # Find digital input by gpio channel
         din = next((item for item in self.digital_inputs if item["gpio"] == channel), None)
+
+        # Get status (on/off)
+        status = GPIO.input(channel)
+        logging.debug("Status %s", status)        
+        if din['reverse']:
+            status = int(not status)
+            logging.debug("Reversed status %s", status)
+
+        # If status is zero we skip away - if not status:
+        if din['status_ev'] == status:
+            return
 
         # Set new status
         din['status_ev'] = status
@@ -406,18 +409,18 @@ class Iono:
         except Exception as ex:
             logging.critical("An exception was encountered in set_led_status: %s", str(ex))
 
-    def reset_digital_input_events(self):
-        """ Reset digital input events array """
-        logging.info("Function reset_digital_input_events")
+    # def reset_digital_input_events(self):
+    #     """ Reset digital input events array """
+    #     logging.info("Function reset_digital_input_events")
 
-        try:
-            # Reset digital_inputs
-            logging.debug("Resetting digital inputs")
-            for din in self.digital_inputs:
-                din['status_ev'] = 0
+    #     try:
+    #         # Reset digital_inputs
+    #         logging.debug("Resetting digital inputs")
+    #         for din in self.digital_inputs:
+    #             din['status_ev'] = 0
 
-        except Exception as ex:
-            logging.critical("An exception was encountered in reset_digital_input_events: %s", str(ex))
+    #     except Exception as ex:
+    #         logging.critical("An exception was encountered in reset_digital_input_events: %s", str(ex))
 
     # Getters
 
@@ -433,7 +436,13 @@ class Iono:
             for din in self.digital_inputs:
 
                 # Get status (on/off)
-                din['status'] = GPIO.input(din['gpio'])
+                status = GPIO.input(din['gpio'])
+                logging.debug("Status %s", status)        
+                if din['reverse']:
+                    status = int(not status)
+                    logging.debug("Reversed status %s", status)
+
+                din['status'] = status
                 logging.debug("GPIO %s, id %s, status %s",
                               din['name'], din['id'], din['status'])
 

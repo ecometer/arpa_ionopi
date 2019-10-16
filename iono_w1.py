@@ -11,6 +11,10 @@
 #  Date : 20/09/2018 07:46:50
 # ----------------------------------------------------------------------
 """ Iono Custom Class - alarms
+
+    Funcion  parse_event(self, din) MUST be overridden
+    # custom function for subclass to override on (_io_callback) event
+
 """
 import sys
 import os
@@ -102,6 +106,10 @@ class IonoW1(Iono):
         except Exception as ex:
             logging.error("An exception was encountered in _send_alarm: %s", str(ex))
 
+    def store_ced_data_csv(self):
+        """ Store 1 wire collected data to csv file for ced """
+        logging.debug("Function store_ced_data_csv")
+
     def store_data_csv(self):
         """ Store all collected data to csv file """
         logging.debug("Function store_data_csv")
@@ -133,6 +141,7 @@ class IonoW1(Iono):
             if self.config_iono['use_io']:
                 logging.debug("Looping through digital inputs")
                 row += "# digital inputs\n"
+                row += "date\t\t\tid\tst\tst_ev\tname\n"
                 for din in self.digital_inputs:
                     logging.debug("Measure %s, id %s", din['name'], din['id'])
 
@@ -202,7 +211,7 @@ class IonoW1(Iono):
 
     def parse_event(self, din):
         """ Parse event """
-        # custom function for subclass to override
+        # custom function for subclass to override on (_io_callback) event
         logging.info("Function parse_event")
 
         try:
@@ -211,13 +220,14 @@ class IonoW1(Iono):
             logging.debug("GPIO %s, id %s, status %s",
                           din['name'], din['id'], din['status_ev'])
 
-            # If AL_Door        > 0 Then alarm_cur = alarm_cur Or 1
-            # If AL_Trafo       > 0 Then alarm_cur = alarm_cur Or 2
-            # If AL_Free_2      > 0 Then alarm_cur = alarm_cur Or 4
-            # If AL_ProbeFlux   > 0 Then alarm_cur = alarm_cur Or 8
-            # If AL_Temp        > 0 Then alarm_cur = alarm_cur Or 16
-            # If AL_PowerSupply > 0 Then alarm_cur = alarm_cur Or 128
-            # If AL_Power       > 0 Then alarm_cur = alarm_cur Or 256
+            # IO 1 -> AL_Door      -> alarm_cur Or 1
+            # IO 2 -> AL_Power     -> alarm_cur Or 256
+            # IO 3 -> AL_Temp      -> alarm_cur Or 16
+            # IO 4 -> AL_Door2     -> alarm_cur Or 2
+            # IO 5 -> AL_ProbeFlux -> alarm_cur Or 8
+            # IO 6 -> AL_ProbeTemp -> alarm_cur Or 4
+            #
+            # If AL_PowerSupply > 0 Then alarm_cur = alarm_cur Or 128 -> FREE
 
             if din['id'] == 1 and din['status_ev']: # Porta Aperta
                 self.alarm_cur = self.alarm_cur | 1
@@ -227,6 +237,15 @@ class IonoW1(Iono):
 
             elif din['id'] == 3 and din['status_ev']: # Temperatura elevata
                 self.alarm_cur = self.alarm_cur | 16
+
+            elif din['id'] == 4 and din['status_ev']: # Porta 2 Aperta
+                self.alarm_cur = self.alarm_cur | 2
+
+            elif din['id'] == 5 and din['status_ev']: # Allarme flusso sonda
+                self.alarm_cur = self.alarm_cur | 8
+
+            elif din['id'] == 6 and din['status_ev']: # Temperatura Testa
+                self.alarm_cur = self.alarm_cur | 4
 
             logging.debug("Current alarm: %s", self.alarm_cur)
 
@@ -286,14 +305,33 @@ class IonoW1(Iono):
 
             self.alarm_cur = 0
 
-            if self.digital_inputs[0]['status']: # Porta Aperta
+            # IO 1 -> AL_Door      -> alarm_cur Or 1
+            # IO 2 -> AL_Power     -> alarm_cur Or 256
+            # IO 3 -> AL_Temp      -> alarm_cur Or 16
+            # IO 4 -> AL_Door2     -> alarm_cur Or 2
+            # IO 5 -> AL_ProbeFlux -> alarm_cur Or 8
+            # IO 6 -> AL_ProbeTemp -> alarm_cur Or 4
+
+            # to reverse set digital_inputs = [ 'reverse' : 0 ]
+            # in file iono.py lines 60-65
+
+            if self.digital_inputs[0]['status']: # AL_Door
                 self.alarm_cur = self.alarm_cur | 1
 
-            if self.digital_inputs[1]['status']: # Mancanza alimentazione
+            if self.digital_inputs[1]['status']: # AL_Power
                 self.alarm_cur = self.alarm_cur | 256
 
-            if self.digital_inputs[2]['status']: # Temperatura elevata
+            if self.digital_inputs[2]['status']: # AL_Temp
                 self.alarm_cur = self.alarm_cur | 16
+
+            if self.digital_inputs[3]['status']: # AL_Door2
+                self.alarm_cur = self.alarm_cur | 2
+
+            if self.digital_inputs[4]['status']: # AL_ProbeFlux
+                self.alarm_cur = self.alarm_cur | 8
+
+            if self.digital_inputs[5]['status']: # AL_ProbeTemp
+                self.alarm_cur = self.alarm_cur | 4
 
             logging.debug("Current alarm: %s", self.alarm_cur)
 
