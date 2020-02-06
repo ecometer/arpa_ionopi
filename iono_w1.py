@@ -146,7 +146,7 @@ class IonoW1(Iono):
                 # row
                 row = now.strftime('%Y-%m-%d %H:%M:00') + "\t"
                 # measure id for database
-                row += str(owi['id']) + "\t"
+                row += str(owi['dbid']) + "\t"
                 # average
                 row += str(round(float(self._mean(self.data_temperature1)), self.decimals)) + "\t"
                 # min
@@ -181,7 +181,7 @@ class IonoW1(Iono):
                 # row
                 row = now.strftime('%Y-%m-%d %H:%M:00') + "\t"
                 # measure id for database
-                row += str(ain['id']) + "\t"
+                row += str(ain['dbid']) + "\t"
                 # average
                 row += str(round(float(self._mean(self.data_analogic1)), self.decimals)) + "\t"
                 # min
