@@ -28,7 +28,7 @@ import threading
 from functions import create_log, clear_screen, unix_time
 from iono_w1 import IonoW1
 
-def polling(module, config):
+def polling(module, config, config_iono):
     """ polling """
     logging.debug("Function polling")
     while True:
@@ -86,13 +86,13 @@ def polling(module, config):
             #
             # arpa stations
             #
-            if config['use_ai']:
+            if config_iono['use_ai']:
                 module.get_analog_input()
 
-            if config['use_io']:
+            if config_iono['use_io']:
                 module.get_digital_input()
 
-            if config['use_1w']:
+            if config_iono['use_1w']:
                 module.get_one_wire_input()
 
             # append new data to make later mean on store_time
@@ -167,7 +167,7 @@ def main():
 
         # start main loop
         logging.info("Starting main thread")
-        main_thread = threading.Thread(target=polling, daemon=True, args=[module, config])
+        main_thread = threading.Thread(target=polling, daemon=True, args=[module, config, config_iono])
         main_thread.start()
 
         # loop forever waiting for user ctrl+c to exit
