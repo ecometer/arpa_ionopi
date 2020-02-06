@@ -8,7 +8,7 @@
 #  Desc : Sferalabs Iono Pi Custom Class
 #  File : iono.py
 #
-#  Date : 20/09/2018 07:46:50
+#  Date : 2020-02-06 11:30
 # ----------------------------------------------------------------------
 """ Iono Custom Class - alarms
 
@@ -39,7 +39,8 @@ class IonoW1(Iono):
 
         # temperature stuff
         self.decimals = 2
-        self.data_temperature = []
+        self.data_temperature1 = []
+        self.data_analogic1 = []
 
         # alarm and messages flag
         self.alarm_cur = 0 # current alarm
@@ -106,9 +107,113 @@ class IonoW1(Iono):
         except Exception as ex:
             logging.error("An exception was encountered in _send_alarm: %s", str(ex))
 
+    def append_ced_data_arrays(self):
+        """ Store new data into array """
+        logging.debug("Function append_ced_data_arrays")
+
+        if self.config_iono['use_1w']:
+            # get first
+            owi = self.one_wire_inputs[0]
+            if owi and owi['value']:
+                # append data
+                logging.debug("Appending %s to temperature list", owi['value'])
+                self.data_temperature1.append(float(owi['value']))
+
+        if self.config_iono['use_ai']:
+            # get first
+            ain = self.analog_inputs[0]
+            if ain and ain['value']:
+                # append data
+                logging.debug("Appending %s to analogic list", ain['value'])
+                self.data_analogic1.append(float(ain['value']))
+
     def store_ced_data_csv(self):
         """ Store 1 wire collected data to csv file for ced """
         logging.debug("Function store_ced_data_csv")
+
+        try:
+
+            if self.config_iono['use_1w']:
+                # get first
+                owi = self.one_wire_inputs[0]
+
+                # build row
+                logging.debug("Build record")
+                # date time
+                now = datetime.now()
+                # one hour back for timestamp
+                now = now - timedelta(hours=1)
+                # row
+                row = now.strftime('%Y-%m-%d %H:%M:00') + "\t"
+                # measure id for database
+                row += str(owi['id']) + "\t"
+                # average
+                row += str(round(float(self._mean(self.data_temperature1)), self.decimals)) + "\t"
+                # min
+                row += str(round(float(min(self.data_temperature1)), self.decimals)) + "\t"
+                # max
+                row += str(round(float(max(self.data_temperature1)), self.decimals)) + "\t"
+                # stddev
+                row += str(round(float(self._stddev(self.data_temperature1)), self.decimals)) + "\n"
+
+                # build daily file_name
+                file_name = os.path.join(
+                    self.config['ftp_path'],
+                    self.config['file_header']+"_"+now.strftime('%Y-%m-%d')+".dat"
+                ) # .%H%M
+
+                # dump data to file
+                logging.info("Saving data to file %s...", file_name)
+                logging.debug("File row\n%s", row)
+                with open(file_name, "a") as file:
+                    file.write(row)
+
+            if self.config_iono['use_ai']:
+                # get first
+                ain = self.analog_inputs[0]
+
+                # build row
+                logging.debug("Build record")
+                # date time
+                now = datetime.now()
+                # one hour back for timestamp
+                now = now - timedelta(hours=1)
+                # row
+                row = now.strftime('%Y-%m-%d %H:%M:00') + "\t"
+                # measure id for database
+                row += str(ain['id']) + "\t"
+                # average
+                row += str(round(float(self._mean(self.data_analogic1)), self.decimals)) + "\t"
+                # min
+                row += str(round(float(min(self.data_analogic1)), self.decimals)) + "\t"
+                # max
+                row += str(round(float(max(self.data_analogic1)), self.decimals)) + "\t"
+                # stddev
+                row += str(round(float(self._stddev(self.data_analogic1)), self.decimals)) + "\n"
+
+                # build daily file_name
+                file_name = os.path.join(
+                    self.config['ftp_path'],
+                    self.config['file_header']+"_"+now.strftime('%Y-%m-%d')+".dat"
+                ) # .%H%M
+
+                # dump data to file
+                logging.info("Saving data to file %s...", file_name)
+                logging.debug("File row\n%s", row)
+                with open(file_name, "a") as file:
+                    file.write(row)
+
+            return True
+
+        except Exception as ex:
+            logging.error("An exception was encountered in store_ced_data_csv: %s", str(ex))
+            return False
+
+        finally:
+            # reset array
+            logging.info("Reset data array")
+            self.data_temperature1 = []
+            self.data_analogic1 = []
 
     def store_data_csv(self):
         """ Store all collected data to csv file """

@@ -39,13 +39,13 @@ def polling(module, config):
         # get the total seconds
         ptime = unix_time(now)
 
-        # # check for new mean
-        # if int(ptime / config['store_time']) == (ptime / config['store_time']):
-        #     # new mean
-        #     logging.info("*** New mean ***")
+        # check for new mean
+        if int(ptime / config['store_time']) == (ptime / config['store_time']):
+            # new mean
+            logging.info("*** New mean ***")
 
-        #     # store values to csv file
-        #     module.store_ced_data_csv()
+            # store values to csv file
+            module.store_ced_data_csv()
 
         # check for new polling
         if int(ptime / config['polling_time']) == (ptime / config['polling_time']):
@@ -84,20 +84,26 @@ def polling(module, config):
             # #module.set_open_collector_status(1, False)
 
             #
-            # arpa stations enable [X]
+            # arpa stations
             #
-            #module.get_digital_input()           # [X]
-            #module.get_one_wire_input()
+            if config['use_ai']:
+                module.get_analog_input()
 
-            # append new temperature data
-            # to make later mean on store_time
-            #module.append_temperature()
+            if config['use_io']:
+                module.get_digital_input()
+
+            if config['use_1w']:
+                module.get_one_wire_input()
+
+            # append new data to make later mean on store_time
+            # needed by store_ced_data_csv() function
+            module.append_ced_data_arrays()
 
             # store values to csv file
-            #module.store_data_csv()              # [X]
+            module.store_data_csv()
 
             # analyse current alarm
-            #module.analyze_alarm()               # [X]
+            module.analyze_alarm()
 
             # wait to avoid further calls in the same second
             time.sleep(1.5)
