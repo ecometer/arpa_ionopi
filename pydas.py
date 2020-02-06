@@ -118,8 +118,8 @@ def main():
 
         # config
         config = {
-            'polling_time' : 10,            # polling (seconds)
-            'store_time' : 60,              # store data (seconds)
+            'polling_time' : 30,            # polling (seconds)
+            'store_time' : 3600,            # store data (seconds)
             'data_path' : None,             # data path - set later on
             'ftp_path' : None,              # data path for ftp export - set later on
             'file_header' : 'xxxxxxxxxxxx', # data file header
