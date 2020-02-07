@@ -89,7 +89,7 @@ class Iono:
         {'gpio': TTL1, 'id': 1, 'dbid': None, 'code': None, 'name': 'WI 1', 'value': None},
     ]
 
-    def __init__(self, config_iono):
+    def __init__(self, conf):
         """ Constructor """
         logging.getLogger('')
         logging.debug("Function __init__")
@@ -99,37 +99,37 @@ class Iono:
         GPIO.setwarnings(False)
 
         # set properties
-        self.config_iono = config_iono
+        self.conf = conf
 
         # Main spi object
         self.spi = None
 
         # Set analog input
-        if self.config_iono['use_ai']:
+        if self.conf['use_ai']:
             self._set_analog_inputs()
 
         # Set digital io
-        if self.config_iono['use_io']:
+        if self.conf['use_io']:
             self._set_digital_io()
         # Enable events
-        if self.config_iono['use_ev']:
+        if self.conf['use_ev']:
             self._set_digital_io_events()
 
         # One wire path and auto detection (first one)
-        if self.config_iono['use_1w']:
+        if self.conf['use_1w']:
             if self.one_wire_inputs[0]['code'] is None:
                 self._find_1wire_ds18b20()
 
         # Set relay outputs
-        if self.config_iono['use_ro']:
+        if self.conf['use_ro']:
             self._set_relay_outputs()
 
         # Set open collectors
-        if self.config_iono['use_oc']:
+        if self.conf['use_oc']:
             self._set_collectors_outputs()
 
         # Set on board led
-        if self.config_iono['use_ld']:
+        if self.conf['use_ld']:
             self._set_onboard_led()
 
     def cleanup(self):

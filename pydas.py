@@ -28,9 +28,8 @@ import threading
 from functions import create_log, clear_screen, unix_time
 from iono_w1 import IonoW1
 import config
-import iono_config
 
-def polling(module, config):
+def polling(module, conf):
     """ polling """
     logging.debug("Function polling")
     while True:
@@ -42,7 +41,7 @@ def polling(module, config):
         ptime = unix_time(now)
 
         # check for new mean
-        if int(ptime / config['store_time']) == (ptime / config['store_time']):
+        if int(ptime / conf['store_time']) == (ptime / conf['store_time']):
             # new mean
             logging.info("*** New mean ***")
 
@@ -50,7 +49,7 @@ def polling(module, config):
             module.store_ced_data_csv()
 
         # check for new polling
-        if int(ptime / config['polling_time']) == (ptime / config['polling_time']):
+        if int(ptime / conf['polling_time']) == (ptime / conf['polling_time']):
 
             # new polling
             logging.info("--- New polling ---")
@@ -88,13 +87,13 @@ def polling(module, config):
             #
             # arpa stations
             #
-            if config['use_ai']:
+            if conf['use_ai']:
                 module.get_analog_input()
 
-            if config['use_io']:
+            if conf['use_io']:
                 module.get_digital_input()
 
-            if config['use_1w']:
+            if conf['use_1w']:
                 module.get_one_wire_input()
 
             # append new data to make later mean on store_time
