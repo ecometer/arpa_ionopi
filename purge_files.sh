@@ -5,6 +5,7 @@
 
 echo "analizzo $HOME/bin/pydas/log/*.log"
 find $HOME/bin/pydas/log/ -name '*.log' -mtime +120 -type f -exec rm -vr {} \;
+find $HOME/bin/pydas/log/ -name '*log*' -mtime +120 -type f -exec rm -vr {} \;
 #find $HOME/bin/pydas/log/ -name '*.log' -mtime +120 -type f -exec echo {} \;
 
 echo "analizzo $HOME/bin/pydas/data/*.dat"
