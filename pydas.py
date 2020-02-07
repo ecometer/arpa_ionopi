@@ -27,8 +27,9 @@ import threading
 # custom
 from functions import create_log, clear_screen, unix_time
 from iono_w1 import IonoW1
+import config
 
-def polling(module, config, config_iono):
+def polling(module, config):
     """ polling """
     logging.debug("Function polling")
     while True:
@@ -86,13 +87,13 @@ def polling(module, config, config_iono):
             #
             # arpa stations
             #
-            if config_iono['use_ai']:
+            if config['use_ai']:
                 module.get_analog_input()
 
-            if config_iono['use_io']:
+            if config['use_io']:
                 module.get_digital_input()
 
-            if config_iono['use_1w']:
+            if config['use_1w']:
                 module.get_one_wire_input()
 
             # append new data to make later mean on store_time
@@ -115,30 +116,6 @@ def main():
     """ Main function """
     module = None
     try:
-
-        # config
-        config = {
-            'polling_time' : 30,            # polling (seconds)
-            'store_time' : 3600,            # store data (seconds)
-            'data_path' : None,             # data path - set later on
-            'ftp_path' : None,              # data path for ftp export - set later on
-            'file_header' : 'xxxxxxxxxxxx', # data file header
-            'ws_url' : 'https://rmqa.ecometer.it/loggeralarms/0000/', # web service url
-            #'ws_url' : 'http://rmqa.arpa.vda.it/loggeralarms/4120/', # web service url
-            #'ws_url' : 'http://192.168.0.12:8000/loggeralarms/4120/' # web service url
-            'reset_alarm_msg_dealy' : 3600, # send a message to ackoledge no alarms (seconds)
-        }
-
-        # iono config
-        config_iono = {
-            'use_ai' : False, # analog input
-            'use_io' : True,  # digital io
-            'use_ev' : True,  # digital io events
-            'use_1w' : False, # one wire input (temperature)
-            'use_ro' : False, # relay outputs
-            'use_oc' : False, # open collectors
-            'use_ld' : False, # on board led
-        }
 
         # Clear
         clear_screen()
@@ -163,11 +140,11 @@ def main():
 
         # create main module object
         logging.info("Creating main iono object...")
-        module = IonoW1(config, config_iono)
+        module = IonoW1(config)
 
         # start main loop
         logging.info("Starting main thread")
-        main_thread = threading.Thread(target=polling, daemon=True, args=[module, config, config_iono])
+        main_thread = threading.Thread(target=polling, daemon=True, args=[module, config])
         main_thread.start()
 
         # loop forever waiting for user ctrl+c to exit

@@ -31,8 +31,8 @@ if __name__ == '__main__':
 
 class IonoW1(Iono):
     """ Arpa iono main class """
-    def __init__(self, config, config_iono):
-        super().__init__(config_iono)
+    def __init__(self, config):
+        super().__init__(config)
 
         # set properties
         self.config = config
@@ -111,7 +111,7 @@ class IonoW1(Iono):
         """ Store new data into array """
         logging.debug("Function append_ced_data_arrays")
 
-        if self.config_iono['use_1w']:
+        if self.config['use_1w']:
             # get first
             owi = self.one_wire_inputs[0]
             if owi and owi['value']:
@@ -119,7 +119,7 @@ class IonoW1(Iono):
                 logging.debug("Appending %s to temperature list", owi['value'])
                 self.data_temperature1.append(float(owi['value']))
 
-        if self.config_iono['use_ai']:
+        if self.config['use_ai']:
             # get first
             ain = self.analog_inputs[0]
             if ain and ain['value']:
@@ -133,7 +133,7 @@ class IonoW1(Iono):
 
         try:
 
-            if self.config_iono['use_1w']:
+            if self.config['use_1w']:
                 # get first
                 owi = self.one_wire_inputs[0]
 
@@ -168,7 +168,7 @@ class IonoW1(Iono):
                 with open(file_name, "a") as file:
                     file.write(row)
 
-            if self.config_iono['use_ai']:
+            if self.config['use_ai']:
                 # get first
                 ain = self.analog_inputs[0]
 
@@ -228,7 +228,7 @@ class IonoW1(Iono):
             row = ''
             date_time = now.strftime('%Y-%m-%d %H:%M:%S') # datetime
 
-            if self.config_iono['use_ai']:
+            if self.config['use_ai']:
                 logging.debug("Looping through analog inputs")
                 row += "# analog inputs\n"
                 for ain in self.analog_inputs:
@@ -243,7 +243,7 @@ class IonoW1(Iono):
                         row += str(None) + "\t"
                     row += str(ain['name']) + "\n" # channel name
 
-            if self.config_iono['use_io']:
+            if self.config['use_io']:
                 logging.debug("Looping through digital inputs")
                 row += "# digital inputs\n"
                 row += "date\t\t\tid\tst\tst_ev\tname\n"
@@ -257,7 +257,7 @@ class IonoW1(Iono):
                     row += str(din['status_ev']) + "\t" # event status 1|0
                     row += str(din['name']) + "\n" # channel name
 
-            if self.config_iono['use_1w']:
+            if self.config['use_1w']:
                 logging.debug("Looping through 1wire inputs")
                 row += "# 1wire inputs\n"
                 for owi in self.one_wire_inputs:
@@ -272,7 +272,7 @@ class IonoW1(Iono):
                         row += str(None) + "\t"
                     row += str(owi['name']) + "\n" # channel name
 
-            if self.config_iono['use_ro']:
+            if self.config['use_ro']:
                 logging.debug("Looping through relay outputs")
                 row += "# relay outputs\n"
                 for rel in self.relay_outputs:
@@ -284,7 +284,7 @@ class IonoW1(Iono):
                     row += str(rel['status']) + "\t" # channel status 1|0
                     row += str(rel['name']) + "\n" # channel name
 
-            if self.config_iono['use_oc']:
+            if self.config['use_oc']:
                 logging.debug("Looping through open collector outputs")
                 row += "# open collector outputs\n"
                 for opc in self.open_collector_outputs:
