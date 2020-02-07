@@ -28,6 +28,7 @@ import threading
 from functions import create_log, clear_screen, unix_time
 from iono_w1 import IonoW1
 import config
+import iono_config
 
 def polling(module, config):
     """ polling """
@@ -131,20 +132,20 @@ def main():
         data_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
         if not os.path.exists(data_path):
             os.mkdir(data_path)
-        config['data_path'] = data_path
+        config.main['data_path'] = data_path
 
         ftp_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'ftp')
         if not os.path.exists(ftp_path):
             os.mkdir(ftp_path)
-        config['ftp_path'] = ftp_path
+        config.main['ftp_path'] = ftp_path
 
         # create main module object
         logging.info("Creating main iono object...")
-        module = IonoW1(config)
+        module = IonoW1(config.main)
 
         # start main loop
         logging.info("Starting main thread")
-        main_thread = threading.Thread(target=polling, daemon=True, args=[module, config])
+        main_thread = threading.Thread(target=polling, daemon=True, args=[module, config.main])
         main_thread.start()
 
         # loop forever waiting for user ctrl+c to exit

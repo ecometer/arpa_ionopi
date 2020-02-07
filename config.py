@@ -12,7 +12,7 @@
 # ----------------------------------------------------------------------
 
 # config
-config = {
+main = {
     # generic
     'polling_time' : 30,            # polling (seconds)
     'store_time' : 3600,            # store data (seconds)
