@@ -19,7 +19,7 @@
 import sys
 import os
 import logging
-import logging.conf
+import logging.config
 from datetime import datetime, timedelta
 import threading
 from math import sqrt
@@ -159,8 +159,8 @@ class IonoW1(Iono):
                 # build daily file_name
                 file_name = os.path.join(
                     self.conf['ftp_path'],
-                    self.conf['file_header']+"_"+now.strftime('%Y-%m-%d')+".dat"
-                ) # .%H%M
+                    self.conf['file_header']+"_"+now.strftime('%Y-%m-%d-%H')+".dat"
+                ) # -%H%M
 
                 # dump data to file
                 logging.info("Saving data to file %s...", file_name)
