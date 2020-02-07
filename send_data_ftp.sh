@@ -28,14 +28,11 @@ echo $$ > $LOCKFILE
 # main script
 #
 
-# mail
-EMAIL=paolosaudin@gmail.com
-
 # ftp
-FTP_HOST='192.168.0.10'
-FTP_USER='builderpi'
-FTP_PASS='builderpi'
-FTP_PATH='/'
+FTP_HOST='ftp.arpal.gov.it'
+FTP_USER='Inventarioemissioni'
+FTP_PASS='Pwf43.4.4$$fRat'
+FTP_PATH='/dati_iono'
 
 # local
 LOCAL_PATH='/home/pi/bin/pydas/ftp/'
@@ -55,7 +52,6 @@ OUT=$(ncftpput -v -u $FTP_USER -p $FTP_PASS $FTP_HOST $FTP_PATH $LOCAL_FILES 2>&
 # check exit code
 if [ $? -ne 0 ]; then
     echo "Error: $OUT"
-    echo "ARPAVDA - $SCRIPTFILE - Ftp failed with error: $OUT" | mail -s "ARPAVDA - Primo Maggio" $EMAIL
     exit 1
 else
     echo "Result: $OUT"
@@ -66,7 +62,6 @@ OUT=$(mv -v "$LOCAL_PATH/"* "$LOCAL_PATH_BACK/" 2>&1)
 # check exit code
 if [ $? -ne 0 ]; then
     echo "Error: $OUT"
-    echo "ARPAVDA - $SCRIPTFILE - Ftp failed with error: $OUT" | mail -s "ARPAVDA - Primo Maggio" $EMAIL
     exit 1
 else
     echo "Result: $OUT"
@@ -75,4 +70,4 @@ fi
 echo "Done"
 
 # Terminate our shell script with success message
-exit 0
+exit 0 
