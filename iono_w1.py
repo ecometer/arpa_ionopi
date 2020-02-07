@@ -133,6 +133,13 @@ class IonoW1(Iono):
 
         try:
 
+            # build daily file_name
+            file_name = os.path.join(
+                self.conf['ftp_path'],
+                self.conf['file_header']+"_"+now.strftime('%Y-%m-%d-%H')+".dat"
+            ) # -%H%M
+            logging.info("Saving data to file %s...", file_name)
+
             if self.conf['use_1w']:
                 # get first
                 owi = self.one_wire_inputs[0]
@@ -156,14 +163,7 @@ class IonoW1(Iono):
                 # stddev
                 row += str(round(float(self._stddev(self.data_temperature1)), self.decimals)) + "\n"
 
-                # build daily file_name
-                file_name = os.path.join(
-                    self.conf['ftp_path'],
-                    self.conf['file_header']+"_"+now.strftime('%Y-%m-%d-%H')+".dat"
-                ) # -%H%M
-
                 # dump data to file
-                logging.info("Saving data to file %s...", file_name)
                 logging.debug("File row\n%s", row)
                 with open(file_name, "a") as file:
                     file.write(row)
@@ -191,14 +191,7 @@ class IonoW1(Iono):
                 # stddev
                 row += str(round(float(self._stddev(self.data_analogic1)), self.decimals)) + "\n"
 
-                # build daily file_name
-                file_name = os.path.join(
-                    self.conf['ftp_path'],
-                    self.conf['file_header']+"_"+now.strftime('%Y-%m-%d')+".dat"
-                ) # .%H%M
-
                 # dump data to file
-                logging.info("Saving data to file %s...", file_name)
                 logging.debug("File row\n%s", row)
                 with open(file_name, "a") as file:
                     file.write(row)
