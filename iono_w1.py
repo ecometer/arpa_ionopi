@@ -133,6 +133,9 @@ class IonoW1(Iono):
 
         try:
 
+            # date time
+            now = datetime.now()
+
             # build daily file_name
             file_name = os.path.join(
                 self.conf['ftp_path'],
