@@ -16,3 +16,10 @@ Setup
   * python3 ~/bin/pydas/pydas.py
   * ~/bin/pydas/start_pydas.sh
   * ~/bin/pydas/stop_pydas.sh
+
+Update Iono Lib
+---------------------
+
+  + git clone --recursive https://github.com/sfera-labs/iono-pi-c-lib.git
+  + cd iono-pi-c-lib
+  + sudo sh build
