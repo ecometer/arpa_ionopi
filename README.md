@@ -7,11 +7,12 @@ Setup
   * sudo apt-get install python3-pip
   * sudo apt-get install git-core
 
-  * pip3 install -r requirements.txt
-
   * mkdir -p ~/bin/pydas
   * git clone https://github.com/ecometer/arpa_ionopi.git ~/bin/pydas/
   * chmod +x ~/bin/pydas/*
 
+  * pip3 install -r ~/bin/pydas/requirements.txt
+
   * python3 ~/bin/pydas/pydas.py
-  * python3 ~/bin/pydas/start_pydas.sh
+  * ~/bin/pydas/start_pydas.sh
+  * ~/bin/pydas/stop_pydas.sh
