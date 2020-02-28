@@ -50,6 +50,31 @@ class IonoW1(Iono):
         self.alarm_door_sent = False
         self.alarm_send_reset_delay = conf['reset_alarm_msg_dealy']
 
+        # default configuration override
+        for din in self.digital_inputs:
+            # reverse
+            if self.conf['dr'+str(din['id'])] is not None:
+                logging.info("Override digital reverse %s:%s", din['id'], self.conf['dr'+str(din['id'])])
+                din['reverse'] = self.conf['dr'+str(din['id'])]
+            # name
+            if self.conf['dn'+str(din['id'])] is not None:
+                logging.info("Override digital name %s:%s", din['id'], self.conf['dn'+str(din['id'])])
+                din['name'] = self.conf['dn'+str(din['id'])]
+
+        # analog override
+        for din in self.analog_inputs:
+            # name
+            if self.conf['an'+str(din['id'])] is not None:
+                logging.info("Override analog name %s:%s", din['id'], self.conf['an'+str(din['id'])])
+                din['name'] = self.conf['an'+str(din['id'])]
+
+        # one wire override
+        for din in self.one_wire_inputs:
+            # name
+            if self.conf['1wn'+str(din['id'])] is not None:
+                logging.info("Override analog name %s:%s", din['id'], self.conf['1wn'+str(din['id'])])
+                din['name'] = self.conf['1wn'+str(din['id'])]
+
     def _mean(self, lst):
         """ Calculate mean """
         logging.debug("Calculating mean")

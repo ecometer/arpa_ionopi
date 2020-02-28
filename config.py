@@ -8,7 +8,7 @@
 #  File : config.py
 #
 #  Date : 2020-02-07 07:56
-#  Update :
+#  Update : 2020-02-28 13:53
 # ----------------------------------------------------------------------
 
 # config
@@ -30,8 +30,32 @@ main = {
     'use_ro' : False, # relay outputs
     'use_oc' : False, # open collectors
     'use_ld' : False, # on board led
-}
 
+    # override default configuration
+
+    # digital input reverse
+    'dr1' : None,
+    'dr2' : None,
+    'dr3' : None,
+    'dr4' : None,
+    'dr5' : None,
+    'dr6' : None,
+    # digital input name
+    'dn1' : None,
+    'dn2' : None,
+    'dn3' : None,
+    'dn4' : None,
+    'dn5' : None,
+    'dn6' : None,
+
+    # analog input name
+    'an1' : None,
+    'an2' : None,
+
+    # one wire input name
+    '1wn1' : None,
+
+}
 
 #'http://rmqa.arpa.vda.it/loggeralarms/0000/'
 #'http://192.168.0.12:8000/loggeralarms/0000/'
