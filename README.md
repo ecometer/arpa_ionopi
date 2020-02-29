@@ -28,3 +28,15 @@ Update Iono Lib
   + sudo sh build
 
   + wget -O $HOME/bin/pydas/start_pydas.sh https://raw.githubusercontent.com/ecometer/arpa_ionopi/master/start_pydas.sh
+
+
+Crontab
+---------------------
+
+# run python script
+@reboot /bin/sleep 120; $HOME/bin/pydas/start_pydas.sh
+@reboot /bin/sleep 120; $HOME/bin/webserver/start_webapp.sh
+
+# purge old files once per day
+@daily $HOME/bin/pydas/purge_files.sh >> $HOME/bin/pydas/log/purge_files_`/bin/date +\%Y\%m`.log 2>&1
+@daily $HOME/bin/webserver/purge_files.sh >> $HOME/bin/webserver/log/purge_files_/bin/date +\%Y\%m.log 2>&1
