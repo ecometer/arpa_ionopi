@@ -27,4 +27,4 @@ Update Iono Lib
   + cd iono-pi-c-lib
   + sudo sh build
 
-  + wget -O $HOME/bin/pydas/start_pydas.sh https://raw.githubusercontent.com/ecometer/arpa_ionopi_webserver/master/start_pydas.sh
+  + wget -O $HOME/bin/pydas/start_pydas.sh https://raw.githubusercontent.com/ecometer/arpa_ionopi/master/start_pydas.sh
