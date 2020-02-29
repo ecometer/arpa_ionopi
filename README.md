@@ -7,15 +7,16 @@ Setup
   * sudo apt-get install python3-pip
   * sudo apt-get install git-core
 
-  * mkdir -p ~/bin/pydas
-  * git clone https://github.com/ecometer/arpa_ionopi.git ~/bin/pydas/
-  * chmod +x ~/bin/pydas/*
+  * mkdir -p $HOME/bin/pydas
+  * git clone https://github.com/ecometer/arpa_ionopi.git $HOME/bin/pydas/
+  * chmod +x $HOME/bin/pydas/*.py
+  * chmod +x $HOME/bin/pydas/*.sh
 
-  * pip3 install -r ~/bin/pydas/requirements.txt
+  * pip3 install -r $HOME/bin/pydas/requirements.txt
 
-  * python3 ~/bin/pydas/pydas.py
-  * ~/bin/pydas/start_pydas.sh
-  * ~/bin/pydas/stop_pydas.sh
+  * python3 $HOME/bin/pydas/pydas.py
+  * $HOME/bin/pydas/start_pydas.sh
+  * $HOME/bin/pydas/stop_pydas.sh
 
 Update Iono Lib
 ---------------------
