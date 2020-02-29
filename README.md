@@ -32,7 +32,6 @@ Update Iono Lib
 
 Crontab
 ---------------------
-
 # run python script
 @reboot /bin/sleep 120; $HOME/bin/pydas/start_pydas.sh
 @reboot /bin/sleep 120; $HOME/bin/webserver/start_webapp.sh
