@@ -14,7 +14,7 @@ Setup
 
   * pip3 install -r $HOME/bin/pydas/requirements.txt
 
-  ° nano $HOME/bin/pydas/config.py
+  * nano $HOME/bin/pydas/config.py
   * python3 $HOME/bin/pydas/pydas.py
   
   * $HOME/bin/pydas/start_pydas.sh
