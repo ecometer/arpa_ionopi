@@ -31,6 +31,7 @@ Update Iono Lib
 
 Crontab
 ---------------------
+  * crontab -e
 ```
 # run python script
 @reboot /bin/sleep 120; $HOME/bin/pydas/start_pydas.sh
