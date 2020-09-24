@@ -8,7 +8,7 @@
 #  File : config.py
 #
 #  Date : 2020-02-07 07:56
-#  Update : 2020-02-28 13:53
+#  Update : 2020-09-24 13:53
 # ----------------------------------------------------------------------
 
 # config
@@ -19,7 +19,7 @@ main = {
     'data_path' : None,             # data path - set later on
     'ftp_path' : None,              # data path for ftp export - set later on
     'file_header' : 'xxxxxxxxxxxx', # data file header
-    'ws_url' : 'https://rmqa.arpal.gov.it/loggeralarms/0000/', # web service url
+    'ws_url' : 'https://xxxxxxxxxxxx/loggeralarms/0000/', # web service url
     'reset_alarm_msg_dealy' : 3600, # send a message to ackoledge no alarms (seconds)
 
     # specific for iono modules
@@ -56,6 +56,3 @@ main = {
     '1wn1' : None,
 
 }
-
-#'http://rmqa.arpa.vda.it/loggeralarms/0000/'
-#'http://192.168.0.12:8000/loggeralarms/0000/'
