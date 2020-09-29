@@ -41,10 +41,10 @@ main = {
     'dr5' : None,
     'dr6' : None,
     # digital input name
-    'dn1' : None,
-    'dn2' : None,
-    'dn3' : None,
-    'dn4' : None,
+    'dn1' : None, # contatto porta
+    'dn2' : None, # contatto alimentazione
+    'dn3' : None, # contatto temperatura alta
+    'dn4' : None, # contatto flusso sonda
     'dn5' : None,
     'dn6' : None,
 
