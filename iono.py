@@ -2,13 +2,13 @@
 # pylint: disable=broad-except, line-too-long
 # -*- coding: utf-8 -*-
 # ----------------------------------------------------------------------
-#  Copyright (c) 1995-2018, Ecometer s.n.c.
+#  Copyright (c) 1995-2020, Ecometer s.n.c.
 #  Author: Paolo Saudin.
 #
 #  Desc : Sferalabs Iono Pi
 #  File : iono.py
 #
-#  Date : 14/08/2018 08:56:28
+#  Date : 2020-10-02 08:02
 # ----------------------------------------------------------------------
 """ Sfera Labs S.r.l. IonoPI Python Class
 
@@ -85,8 +85,9 @@ class Iono:
 
     one_wire_base_dir = '/sys/bus/w1/devices/' # 1-Wire base path
 
-    one_wire_inputs = [ # 1-Wire, Wiegand or generic TTL I/O GPIO4
+    one_wire_inputs = [ # 1-Wire, Wiegand or generic TTL I/O GPIO4 - ds18b20
         {'gpio': TTL1, 'id': 1, 'dbid': None, 'code': None, 'name': 'WI 1', 'value': None},
+        {'gpio': TTL1, 'id': 2, 'dbid': None, 'code': None, 'name': 'WI 2', 'value': None},
     ]
 
     def __init__(self, conf):
@@ -118,7 +119,10 @@ class Iono:
         # One wire path and auto detection (first one)
         if self.conf['use_1w']:
             if self.one_wire_inputs[0]['code'] is None:
-                self._find_1wire_ds18b20()
+                self._find_1wire_ds18b20(0)
+
+            if self.one_wire_inputs[1]['code'] is None:
+                self._find_1wire_ds18b20(1)
 
         # Set relay outputs
         if self.conf['use_ro']:
@@ -273,7 +277,7 @@ class Iono:
         logging.debug("Value: %s", value)
         return value
 
-    def _find_1wire_ds18b20(self):
+    def _find_1wire_ds18b20(self, id):
         """ Find first DS18B20 """
         logging.debug("Function _find_1wire_ds18b20")
 
@@ -282,12 +286,12 @@ class Iono:
             logging.debug("Glob: %s", self.one_wire_base_dir + '28*')
             device_folders = glob.glob(self.one_wire_base_dir + '28*')
             if len(device_folders) >= 1:
-                device_folder = device_folders[0]
+                device_folder = device_folders[id]
                 #logging.debug("Device folder: %s", device_folder)
                 # ['/sys/bus/w1/devices/28-0000075e0152']
                 basename = os.path.basename(device_folder)
                 logging.debug("Basename: %s", basename)
-                self.one_wire_inputs[0]['code'] = str(basename)
+                self.one_wire_inputs[id]['code'] = str(basename)
             else:
                 logging.warning("No devices found")
 
